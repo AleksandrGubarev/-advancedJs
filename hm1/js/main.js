@@ -20,4 +20,41 @@ const renderPage = list => {
   document.querySelector('.products').innerHTML = list.map(item => renderProduct(item.title, item.price)).join('');
 };
 
+function totalProductsSum() {
+  let productsSum = 0;
+  this.goods.forEach(item => {
+    productsSum += item.price;
+  });
+};
+
+class basket {
+  addProduct() {
+
+  };
+  delProduct() {
+
+  };
+  renderCartProduct() {
+
+  };
+  changeQuantityProducts() {
+
+  };
+  addTotalProductsSum() {
+
+  };
+};
+
+class basketElem {
+  renderElCart() {
+
+  };
+  changeQuantityProduct() {
+
+  };
+  addTotalProductSum() {
+
+  };
+};
+
 renderPage(products);
