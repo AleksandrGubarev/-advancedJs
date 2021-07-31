@@ -4,13 +4,31 @@
 <head>
   <meta charset="UTF-8">
   <title>Интернет-магазин</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
   <header class="header">
     <div class="container">
-      <button class="btn-cart" type="button">Корзина</button>
+      <div class="cart__wrap">
+        <button class="btn-cart" type="button">Корзина</button>
+        <div class="cart__list hidden">
+          <!-- <div class="cart__elem" data-id="">
+            <div class="product__wrap-left">
+              <img src="" alt="Some img" class="product__img">
+              <div class="product__desc">
+                <p class="product__name"></p>
+                <p class="product__quantity">Количетсво:</p>
+                <p class="product__price"></p>
+              </div>
+            </div>
+            <div class="product__wrap-right">
+              <p class="product_price_total"></p>
+              <button class="del-product">X</button>
+            </div>
+          </div> -->
+        </div>
+      </div>
     </div>
   </header>
   <main>

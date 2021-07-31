@@ -1,60 +1,103 @@
-const products = [
-  { id: 1, title: 'Notebook', price: 2000 },
-  { id: 2, title: 'Mouse', price: 20 },
-  { id: 3, title: 'Keyboard', price: 200 },
-  { id: 4, title: 'Gamepad', price: 50 },
-];
-//Функция для формирования верстки каждого товара
-//Добавить в выводе изображение
-const renderProduct = (title, price) => {
-  return `<div class="product-item">
-                <img src="img/notebook.jpg" class="product__img" alt="${title}">
-                <h3>${title}</h3>
-                <p>${price}</p>
-                <button class="buy-btn">Купить</button>
+const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+
+class ProductsList {
+  constructor(container = '.products') {
+    this.container = container;
+    this.goods = [];
+    this._getProducts()
+      .then(data => {
+        this.goods = [...data];
+        this.render()
+      });
+  }
+  _getProducts() {
+    return fetch(`${API}/catalogData.json`)
+      .then(result => result.json())
+      .catch(error => {
+        console.log(error);
+      })
+  }
+  calcSum() {
+    return this.allProducts.reduce((accum, item) => accum += item.price, 0);
+  }
+  render() {
+    const block = document.querySelector(this.container);
+    for (let product of this.goods) {
+      const productObj = new ProductItem(product);
+      block.insertAdjacentHTML('beforeend', productObj.render());
+    }
+  }
+}
+
+class ProductItem {
+  constructor(product, img = 'https://via.placeholder.com/200x150') {
+    this.title = product.product_name;
+    this.price = product.price;
+    this.id = product.id_product;
+    this.img = img;
+  }
+  render() {
+    return `<div class="product-item" data-id="${this.id}">
+                <img src="${this.img}" alt="Some img">
+                <div class="desc">
+                    <h3>${this.title}</h3>
+                    <p>${this.price} $</p>
+                    <button class="buy-btn">Купить</button>
+                </div>
             </div>`
-};
-const renderPage = list => {
-  // const productsList = list.map(item => renderProduct(item.title, item.price));
-  // console.log(productsList);
-  document.querySelector('.products').innerHTML = list.map(item => renderProduct(item.title, item.price)).join('');
-};
+  }
+}
 
-function totalProductsSum() {
-  let productsSum = 0;
-  this.goods.forEach(item => {
-    productsSum += item.price;
-  });
-};
+let list = new ProductsList();
 
-class basket {
-  addProduct() {
+class Basket {
+  constructor(container = '.cart__list') {
+    this.container = container;
+    this.goods = [];
+    this._hiddenBasket();
+    this._getBasketElem()
+      .then(data => {
+        this.goods = [...data.contents];
+        this.render()
+      })
+  }
+  _getBasketElem() {
+    return fetch(`${API}/getBasket.json`)
+      .then(result => result.json())
+      .catch(error => {
+        console.log(error);
+      })
+  }
+  render() {
+    const block = document.querySelector(this.container);
+    for (let product of this.goods) {
+      const productElem = new BasketElem();
+      block.insertAdjacentHTML('beforeend', productElem.render(product));
+    }
+  }
+  _hiddenBasket() {
+    document.querySelector(".btn-cart").addEventListener('click', () => {
+      document.querySelector(this.container).classList.toggle('hidden');
+    });
+  }
+}
+class BasketElem {
+  render(product) {
+    return `<div class="cart__elem" data-id="${product.id_product}">
+              <div class="product__wrap-left">
+                <img src="${product.img}" alt="Some img">
+                <div class="product__desc">
+                  <p class="product__name">${product.product_name}</p>
+                  <p class="product__quantity">Количетсво: ${product.quantity}</p>
+                  <p class="product__price">${product.price}$</p>
+                </div>
+              </div>
+              <div class="product__wrap-right">
+                <p class="product_price_total">${product.quantity * product.price}$</p>
+                <button class="del-product" data-id="${product.id_product}">X</button>
+              </div>
+            </div>`
+  }
+}
 
-  };
-  delProduct() {
-
-  };
-  renderCartProduct() {
-
-  };
-  changeQuantityProducts() {
-
-  };
-  addTotalProductsSum() {
-
-  };
-};
-
-class basketElem {
-  renderElCart() {
-
-  };
-  changeQuantityProduct() {
-
-  };
-  addTotalProductSum() {
-
-  };
-};
-
-renderPage(products);
+let bask = new Basket();
